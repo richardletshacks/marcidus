@@ -7,7 +7,7 @@ import java.net.URL
 
 object RedditUtils {
 
-    fun getPosts(subreddit: String, category: String = "hot", limit: Int = 20): List<RedditPost> {
+    fun getPosts(subreddit: String?, category: String = "hot", limit: Int = 20): List<RedditPost> {
         return try {
             val content = URL("https://www.reddit.com/r/$subreddit/$category.json?limit=$limit&raw_json=1").readTextWithCustomAgent() // get raw json data
             val postsJson = JsonParser.parseString(content).asJsonObject["data"].asJsonObject["children"].asJsonArray // parse post json array

@@ -25,7 +25,8 @@ class PostScheduler(private val client: IGClient) {
         // launch post coroutine
         launch {
             while(isActive) {
-                val randomPost = RedditUtils.getPosts(subreddits.random()).filter { cache.contains(it.url).not() }.random() // get random post
+                val posts = RedditUtils.getPosts(subreddits.random()).filter { cache.contains(it.url).not() } // retrieve a list of posts
+                val randomPost = if(posts.isEmpty().not()) posts.random() else continue // get random post
                 cache.push(randomPost.url ?: continue, 30) // push post to cache so it isn't posted twice
                 if(post(randomPost).not()) continue // if failed to post, try again with new post
                 val delay = (minDelay..maxDelay).random()
