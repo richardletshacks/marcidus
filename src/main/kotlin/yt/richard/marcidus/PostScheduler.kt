@@ -30,7 +30,7 @@ class PostScheduler(private val client: IGClient) {
                 cache.push(randomPost.url ?: continue, 30) // push post to cache so it isn't posted twice
                 if(post(randomPost).not()) continue // if failed to post, try again with new post
                 val delay = (minDelay..maxDelay).random()
-                println("Posting next post in ${SimpleDateFormat("HH:mm:ss").format(Date(delay - 3600000))}")
+                println("Posting next post in ${SimpleDateFormat("HH:mm:ss").format(Date(delay - TimeZone.getDefault().rawOffset))}")
                 delay(delay) // wait random delay
             }
         }
