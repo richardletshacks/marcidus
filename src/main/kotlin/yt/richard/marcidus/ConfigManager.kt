@@ -22,15 +22,7 @@ object ConfigManager {
     }
 
     private fun createDefaultConfig() {
-        val json = GsonBuilder().setPrettyPrinting().create().toJson(hashMapOf(
-            "username" to "example",
-            "password" to "dummy123",
-            "subreddits" to listOf("memes", "dankmemes"),
-            "min_delay" to 3600000,
-            "max_delay" to 5400000,
-            "description" to "{title}\n\nby /u/{author} in /r/{subreddit} (https://redd.it/{id})"
-        ))
-        File("config.json").writeText(json)
+        javaClass.classLoader.getResourceAsStream("config.json").use { File("config.json").writeBytes(it?.readBytes() ?: return) }
     }
 
     class Config {

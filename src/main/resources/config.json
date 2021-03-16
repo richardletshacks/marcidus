@@ -1,0 +1,11 @@
+{
+  "username": "example",
+  "password": "dummy123",
+  "subreddits": [
+    "memes",
+    "dankmemes"
+  ],
+  "min_delay": 3600000,
+  "max_delay": 5400000,
+  "description": "{title}\n\nby /u/{author} in /r/{subreddit} (https://redd.it/{id})"
+}
