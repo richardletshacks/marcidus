@@ -21,6 +21,6 @@ object IGLoginUtils {
 
     // handle two factor and email challenges
     private class LoginHandler : IGClient.Builder.LoginHandler {
-        override fun accept(client: IGClient, t: LoginResponse): LoginResponse = IGChallengeUtils.resolveChallenge(client, t, Callable { println("Please input code: "); return@Callable Scanner(System.`in`).nextLine() })
+        override fun accept(client: IGClient, t: LoginResponse): LoginResponse = IGChallengeUtils.resolveChallenge(client, t) { println("Please input code: "); readLine().orEmpty() }
     }
 }
