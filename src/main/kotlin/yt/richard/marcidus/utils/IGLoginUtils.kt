@@ -4,8 +4,6 @@ import com.github.instagram4j.instagram4j.IGClient
 import com.github.instagram4j.instagram4j.responses.accounts.LoginResponse
 import com.github.instagram4j.instagram4j.utils.IGChallengeUtils
 import yt.richard.marcidus.ConfigManager
-import java.util.*
-import java.util.concurrent.Callable
 
 object IGLoginUtils {
 

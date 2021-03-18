@@ -37,6 +37,7 @@ class PostScheduler(private val client: IGClient) {
     }
 
     private fun post(post: RedditPost): Boolean {
+        println("Trying to post https://reddit.com${post.permalink}...")
         return if(post.over_18 == true || post.is_self == true)
             false // we don't want nsfw and non media posts
         else if(post.is_video == true)
@@ -49,8 +50,8 @@ class PostScheduler(private val client: IGClient) {
 
     private fun postVideo(post: RedditPost): Boolean {
         Runtime.getRuntime().exec("youtube-dl --o temp --write-thumbnail https://reddit.com${post.permalink}").waitFor() // await youtube-dl download
-        val video = File("temp.mp4").readBytes(); File("temp.mp4").delete() // read video into memory then delete file                              TODO: pipe youtube-dl output so no need to save files
-        val thumbnail = File("temp.png").readBytes(); File("temp.png").delete() // read thumbnail into memory and delete file
+        val video = File("temp.mp4").let { file -> if(file.exists()) file.readBytes().also { file.delete() } else return false } // read video into memory then delete file             TODO: pipe youtube-dl output so no need to save files
+        val thumbnail = File("temp.png").let { file -> if(file.exists()) file.readBytes().also { file.delete() } else return false } // read thumbnail into memory and delete file
         return client.actions.timeline().uploadVideo(video, thumbnail, post.createDescription()).handle { success, error ->
             return@handle if(success != null) {
                 println("Successfully posted video $post")
