@@ -67,7 +67,7 @@ class PostScheduler(private val client: IGClient) {
         val galleryItems = post.gallery_data?.get("items")?.asJsonArray?.map { it.asJsonObject["media_id"].asString } ?: return false // retrieve list of gallery item ids
         if(galleryItems.size > 10) return false // if more than 10 items fail (instagram limit)
         val mediaItems = galleryItems.map { item -> post.media_metadata?.let { it[item].asJsonObject["s"].asJsonObject["u"].asString } ?: return false } // list of direct media links using previously retrieved item ids (data structure is id.s.u)
-        val sidecarItems = mediaItems.map { TimelineAction.SidecarPhoto(URL(it).readBytes()) } // load media into instagram album objects
+        val sidecarItems = mediaItems.map { TimelineAction.SidecarPhoto(URL(it).readBytesWithCustomAgent()) } // load media into instagram album objects
         return client.actions.timeline().uploadAlbum(sidecarItems, post.createDescription()).handle { success, error ->
             return@handle if(success != null) {
                 println("Successfully posted album $post")
@@ -80,7 +80,7 @@ class PostScheduler(private val client: IGClient) {
     }
 
     private fun postImage(post: RedditPost, makeSquare: Boolean = false): Boolean {
-        val img = URL(post.url).readBytes().let { if(makeSquare) ImageUtils.makeSquare(it) else it } // load image and make it squared if previously failed due to non instagram aspect ratio
+        val img = URL(post.url).readBytesWithCustomAgent().let { if(makeSquare) ImageUtils.makeSquare(it) else it } // load image and make it squared if previously failed due to non instagram aspect ratio
         return client.actions.timeline().uploadPhoto(img, post.createDescription()).handle { success, error ->
             return@handle if(success != null) {
                 println("Successfully posted image $post")
